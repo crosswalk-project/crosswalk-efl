@@ -27,7 +27,6 @@ class RemoteDebuggingServer;
 class SysAppsComponent;
 class XWalkBrowserContext;
 class XWalkComponent;
-class XWalkContentBrowserClient;
 class XWalkAppExtensionBridge;
 
 namespace application {
@@ -47,28 +46,10 @@ class XWalkRunner {
   // Read the comments below before using this. Relying too much on this
   // accessor makes the code harder to change and harder to reason about.
   static XWalkRunner* GetInstance();
-
+  static scoped_ptr<XWalkRunner> Create();
   virtual ~XWalkRunner();
 
-  // All sub objects should have their dependencies passed during their
-  // initialization, so that these accessors below are not frequently accessed.
-  // Instead of calling these, consider explicitly passing the dependencies
-  // to the objects that need them.
-  //
-  // For example, if "Application System" needs to use "Runtime Context", we
-  // should pass the "Runtime Context" to "Application System" instead of
-  // making "Application System" ask XWalkRunner for its dependency.
-  //
-  // Scenarios when it is fine to use the accessors:
-  //
-  // - Prototyping solutions, in which we want to see the solution working, and
-  //   all dependencies are still not clear. It avoids writing down a lot of
-  //   code just to test something out.
-  //
-  // - In situations where you don't control the creation of a certain
-  //   object. Certain APIs doesn't allow us to pass the dependencies, so we
-  //   need to reach them some way.
-  XWalkBrowserContext* browser_context() { return browser_context_.get(); }
+  virtual XWalkBrowserContext* browser_context() = 0;
   application::ApplicationSystem* app_system();
   extensions::XWalkExtensionService* extension_service() {
     return extension_service_.get();
@@ -77,9 +58,21 @@ class XWalkRunner {
   // Stages of main parts. See content/browser_main_parts.h for description.
   virtual void PreMainMessageLoopRun();
   virtual void PostMainMessageLoopRun();
+  virtual content::ContentBrowserClient* GetContentBrowserClient() = 0;
 
   void EnableRemoteDebugging(int port);
   void DisableRemoteDebugging();
+
+  // We track the render process lifecycle to register Crosswalk
+  // extensions. Some subsystems are mostly implemented using extensions.
+  void OnRenderProcessWillLaunch(content::RenderProcessHost* host);
+  void OnRenderProcessHostGone(content::RenderProcessHost* host);
+
+  // These variables are used to export some values from the browser process
+  // side to the extension side, such as application IDs and whatnot.
+  void InitializeRuntimeVariablesForExtensions(
+      const content::RenderProcessHost* host,
+      base::ValueMap* runtime_variables);
 
  protected:
   XWalkRunner();
@@ -99,33 +92,11 @@ class XWalkRunner {
   virtual scoped_ptr<StorageComponent> CreateStorageComponent();
 
  private:
-  friend class XWalkMainDelegate;
   friend class ::XWalkTestSuiteInitializer;
 
   // To track OnRenderProcessHostGone.
   friend class application::Application;
 
-  // This class acts as an "arm" of XWalkRunner to fulfill Content API needs,
-  // it may call us back in some situations where the a more wider view of the
-  // objects is necessary, e.g. during render process lifecycle callbacks.
-  friend class XWalkContentBrowserClient;
-
-  // We track the render process lifecycle to register Crosswalk
-  // extensions. Some subsystems are mostly implemented using extensions.
-  void OnRenderProcessWillLaunch(content::RenderProcessHost* host);
-  void OnRenderProcessHostGone(content::RenderProcessHost* host);
-
-  // Create the XWalkRunner object. We use a factory function so that we can
-  // switch the concrete class on compile time based on the platform, separating
-  // the per-platform behavior and data in the subclasses.
-  static scoped_ptr<XWalkRunner> Create();
-
-  // Note: this is not public as we want to discourage the rest of Crosswalk to
-  // rely directly on this object.
-  content::ContentBrowserClient* GetContentBrowserClient();
-
-  scoped_ptr<XWalkContentBrowserClient> content_browser_client_;
-  scoped_ptr<XWalkBrowserContext> browser_context_;
   scoped_ptr<extensions::XWalkExtensionService> extension_service_;
   scoped_ptr<XWalkAppExtensionBridge> app_extension_bridge_;
 
@@ -138,12 +109,6 @@ class XWalkRunner {
 
   // Remote debugger server.
   scoped_ptr<RemoteDebuggingServer> remote_debugging_server_;
-
-  // These variables are used to export some values from the browser process
-  // side to the extension side, such as application IDs and whatnot.
-  void InitializeRuntimeVariablesForExtensions(
-      const content::RenderProcessHost* host,
-      base::ValueMap* runtime_variables);
 
   DISALLOW_COPY_AND_ASSIGN(XWalkRunner);
 };

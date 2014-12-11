@@ -19,10 +19,7 @@
 #include "xwalk/runtime/browser/storage_component.h"
 #include "xwalk/runtime/browser/sysapps_component.h"
 #include "xwalk/runtime/browser/xwalk_app_extension_bridge.h"
-#include "xwalk/runtime/browser/xwalk_browser_context.h"
-#include "xwalk/runtime/browser/xwalk_browser_main_parts.h"
 #include "xwalk/runtime/browser/xwalk_component.h"
-#include "xwalk/runtime/browser/xwalk_content_browser_client.h"
 #include "xwalk/runtime/common/xwalk_runtime_features.h"
 #include "xwalk/runtime/common/xwalk_switches.h"
 
@@ -34,34 +31,13 @@
 
 namespace xwalk {
 
-namespace {
-
-XWalkRunner* g_xwalk_runner = NULL;
-
-}  // namespace
-
 XWalkRunner::XWalkRunner() {
-  VLOG(1) << "Creating XWalkRunner object.";
-  DCHECK(!g_xwalk_runner);
-  g_xwalk_runner = this;
 
   XWalkRuntimeFeatures::GetInstance()->Initialize(
       CommandLine::ForCurrentProcess());
-
-  // Initializing after the g_xwalk_runner is set to ensure
-  // XWalkRunner::GetInstance() can be used in all sub objects if needed.
-  content_browser_client_.reset(new XWalkContentBrowserClient(this));
 }
 
 XWalkRunner::~XWalkRunner() {
-  DCHECK(g_xwalk_runner);
-  g_xwalk_runner = NULL;
-  VLOG(1) << "Destroying XWalkRunner object.";
-}
-
-// static
-XWalkRunner* XWalkRunner::GetInstance() {
-  return g_xwalk_runner;
 }
 
 application::ApplicationSystem* XWalkRunner::app_system() {
@@ -69,7 +45,7 @@ application::ApplicationSystem* XWalkRunner::app_system() {
 }
 
 void XWalkRunner::PreMainMessageLoopRun() {
-  browser_context_.reset(new XWalkBrowserContext);
+#if !defined(XWALK_EFL)
   app_extension_bridge_.reset(new XWalkAppExtensionBridge());
 
   CommandLine* cmd_line = CommandLine::ForCurrentProcess();
@@ -79,12 +55,12 @@ void XWalkRunner::PreMainMessageLoopRun() {
 
   CreateComponents();
   app_extension_bridge_->SetApplicationSystem(app_component_->app_system());
+#endif
 }
 
 void XWalkRunner::PostMainMessageLoopRun() {
   DestroyComponents();
   extension_service_.reset();
-  browser_context_.reset();
   DisableRemoteDebugging();
 }
 
@@ -115,7 +91,7 @@ void XWalkRunner::AddComponent(scoped_ptr<XWalkComponent> component) {
 }
 
 scoped_ptr<ApplicationComponent> XWalkRunner::CreateAppComponent() {
-  return make_scoped_ptr(new ApplicationComponent(browser_context_.get()));
+  return make_scoped_ptr(new ApplicationComponent(browser_context()));
 }
 
 scoped_ptr<SysAppsComponent> XWalkRunner::CreateSysAppsComponent() {
@@ -151,6 +127,8 @@ void XWalkRunner::OnRenderProcessWillLaunch(content::RenderProcessHost* host) {
         host, &extension_thread_extensions);
   }
 
+// Move to IMPL
+#if 0//!defined(XWALK_EFL)
   // TODO(cmarcelo): Once functionality is moved to components, remove
   // CreateInternalExtensions*() functions from XWalkBrowserMainParts.
   XWalkBrowserMainParts* main_parts = content_browser_client_->main_parts();
@@ -158,6 +136,7 @@ void XWalkRunner::OnRenderProcessWillLaunch(content::RenderProcessHost* host) {
       host, &ui_thread_extensions);
   main_parts->CreateInternalExtensionsForExtensionThread(
       host, &extension_thread_extensions);
+#endif
 
   scoped_ptr<base::ValueMap> runtime_variables(new base::ValueMap);
   InitializeRuntimeVariablesForExtensions(host, runtime_variables.get());
@@ -173,33 +152,18 @@ void XWalkRunner::OnRenderProcessHostGone(content::RenderProcessHost* host) {
 }
 
 void XWalkRunner::EnableRemoteDebugging(int port) {
+#if !defined(XWALK_EFL)
   const char* local_ip = "0.0.0.0";
   if (port > 0 && port < 65535) {
     remote_debugging_server_.reset(
         new RemoteDebuggingServer(browser_context(),
             local_ip, port, std::string()));
   }
+#endif
 }
 
 void XWalkRunner::DisableRemoteDebugging() {
   remote_debugging_server_.reset();
-}
-
-// static
-scoped_ptr<XWalkRunner> XWalkRunner::Create() {
-  XWalkRunner* runner = NULL;
-#if defined(OS_ANDROID)
-  runner = new XWalkRunnerAndroid;
-#elif defined(OS_TIZEN)
-  runner = new XWalkRunnerTizen;
-#else
-  runner = new XWalkRunner;
-#endif
-  return scoped_ptr<XWalkRunner>(runner);
-}
-
-content::ContentBrowserClient* XWalkRunner::GetContentBrowserClient() {
-  return content_browser_client_.get();
 }
 
 }  // namespace xwalk
