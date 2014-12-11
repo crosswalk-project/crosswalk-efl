@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#if !defined(XWALK_EFL)
 #include "xwalk/runtime/app/xwalk_main_delegate.h"
 #include "content/public/app/content_main.h"
 
@@ -15,11 +16,24 @@
 #include "sandbox/win/src/sandbox_types.h"
 #endif
 
+#else
+#include "public/ewk_context.h"
+#include "public/ewk_main.h"
+#include "public/ewk_view.h"
+#include "xwalk/runtime/browser/ui/native_app_window.h"
+#include "xwalk/runtime/browser/ui/native_app_window_efl.h"
+#endif // XWALK_EFL
+
 #if defined(OS_WIN)
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, wchar_t*, int) {
 #else
 int main(int argc, const char** argv) {
 #endif
+#if defined(XWALK_EFL)
+  ewk_set_arguments(argc, (char**)argv);
+  xwalk::NativeAppWindow::Initialize();
+  return 0;
+#else
 #if defined(OS_MACOSX)
     // Do the delegate work in xwalk_content_main to avoid having to export the
   // delegate types.
@@ -39,4 +53,5 @@ int main(int argc, const char** argv) {
 #endif
   return content::ContentMain(params);
 #endif
+#endif // XWALK_EFL
 }

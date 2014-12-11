@@ -21,7 +21,9 @@ StorageComponent::~StorageComponent() {
 void StorageComponent::CreateExtensionThreadExtensions(
     content::RenderProcessHost* host,
     extensions::XWalkExtensionVector* extensions) {
+#if !defined(XWALK_EFL)
   extensions->push_back(new experimental::NativeFileSystemExtension(host));
+#endif
 }
 
 }  // namespace xwalk

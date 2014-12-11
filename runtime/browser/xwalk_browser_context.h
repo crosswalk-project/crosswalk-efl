@@ -75,12 +75,12 @@ class XWalkBrowserContext
   virtual content::PushMessagingService* GetPushMessagingService() OVERRIDE;
   virtual content::SSLHostStateDelegate* GetSSLHostStateDelegate() OVERRIDE;
 
-  RuntimeURLRequestContextGetter* GetURLRequestContextGetterById(
+  virtual RuntimeURLRequestContextGetter* GetURLRequestContextGetterById(
       const std::string& pkg_id);
-  net::URLRequestContextGetter* CreateRequestContext(
+  virtual net::URLRequestContextGetter* CreateRequestContext(
       content::ProtocolHandlerMap* protocol_handlers,
       content::URLRequestInterceptorScopedVector request_interceptors);
-  net::URLRequestContextGetter* CreateRequestContextForStoragePartition(
+  virtual net::URLRequestContextGetter* CreateRequestContextForStoragePartition(
       const base::FilePath& partition_path,
       bool in_memory,
       content::ProtocolHandlerMap* protocol_handlers,
@@ -100,7 +100,7 @@ class XWalkBrowserContext
 
   // Performs initialization of the XWalkBrowserContext while IO is still
   // allowed on the current thread.
-  void InitWhileIOAllowed();
+  virtual void InitWhileIOAllowed();
 
 #if defined(OS_ANDROID)
   // Reset visitedlink master and initialize it.

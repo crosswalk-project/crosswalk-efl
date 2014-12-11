@@ -69,6 +69,14 @@
             'browser/application_service_tizen.h',
           ],
         }],
+        ['xwalk_efl==1',{
+          'dependencies':[
+            '../tizen_src/impl/chromium-efl-deps.gyp:efl',
+          ],
+          'include_dirs': [
+            '../../tizen_src/impl',
+          ],
+        }],
       ],
       'include_dirs': [
         '..',

@@ -21,7 +21,14 @@
 #include "ui/base/ui_base_types.h"
 #include "xwalk/application/browser/application_security_policy.h"
 #include "xwalk/application/common/application_data.h"
+#if defined(XWALK_EFL)
+#include "browser_context_efl.h"
+#include "web_contents_delegate_efl.h"
+typedef content::BrowserContextEfl XWalkBrowserContext;
+typedef content::WebContentsDelegateEfl Runtime;
+#else
 #include "xwalk/runtime/browser/runtime.h"
+#endif
 
 namespace content {
 class RenderProcessHost;
@@ -44,8 +51,11 @@ class ApplicationSecurityPolicy;
 // terminated.
 // There's one-to-one correspondence between Application and Render Process
 // Host, obtained from its "runtimes" (pages).
-class Application : public Runtime::Observer,
-                    public content::RenderProcessHostObserver {
+class Application : public content::RenderProcessHostObserver
+                 #if !defined(XWALK_EFL)
+                  , public Runtime::Observer
+                 #endif
+{
  public:
   virtual ~Application();
 
@@ -122,9 +132,11 @@ class Application : public Runtime::Observer,
   virtual bool Launch(const LaunchParams& launch_params);
   virtual void InitSecurityPolicy();
 
+#if !defined(XWALK_EFL)
   // Runtime::Observer implementation.
   virtual void OnNewRuntimeAdded(Runtime* runtime) override;
   virtual void OnRuntimeClosed(Runtime* runtime) override;
+#endif
 
   // Get the path of splash screen image. Return empty path by default.
   // Sub class can override it to return a specific path.
@@ -138,8 +150,9 @@ class Application : public Runtime::Observer,
   content::WebContents* web_contents_;
   bool security_mode_enabled_;
 
+#if !defined(XWALK_EFL)
   NativeAppWindow::CreateParams window_show_params_;
-
+#endif
  private:
   // We enforce ApplicationService ownership.
   friend class ApplicationService;
@@ -166,8 +179,10 @@ class Application : public Runtime::Observer,
   GURL GetAbsoluteURLFromKey(const std::string& key);
 
   void NotifyTermination();
+#if !defined(XWALK_EFL)
   // Notification from XWalkAppExtensionBridge.
   void RenderChannelCreated();
+#endif
 
   Observer* observer_;
 

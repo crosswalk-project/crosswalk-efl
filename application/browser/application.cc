@@ -21,10 +21,14 @@
 #include "xwalk/application/common/application_manifest_constants.h"
 #include "xwalk/application/common/constants.h"
 #include "xwalk/application/common/manifest_handlers/warp_handler.h"
+#include "xwalk/runtime/browser/xwalk_runner.h"
+#if !defined(XWALK_EFL)
 #include "xwalk/runtime/browser/runtime.h"
 #include "xwalk/runtime/browser/runtime_ui_delegate.h"
 #include "xwalk/runtime/browser/xwalk_browser_context.h"
-#include "xwalk/runtime/browser/xwalk_runner.h"
+#else
+#include "xwalk_runner_efl.h"
+#endif
 
 #if defined(OS_TIZEN)
 #include "xwalk/application/browser/application_tizen.h"
@@ -219,17 +223,26 @@ bool Application::Launch(const LaunchParams& launch_params) {
     return false;
 
   remote_debugging_enabled_ = launch_params.remote_debugging;
+  Runtime* runtime = NULL;
+#if !defined(XWALK_EFL)
   auto site = content::SiteInstance::CreateForURL(browser_context_, url);
-  Runtime* runtime = Runtime::Create(browser_context_, site);
+  runtime = Runtime::Create(browser_context_, site);
   runtime->set_observer(this);
   runtime->set_remote_debugging_enabled(remote_debugging_enabled_);
   runtimes_.push_back(runtime);
+  web_contents_ = runtime->web_contents();
+#else
+  DCHECK(xwalk::XWalkRunnerEfl::GetInstance());
+  DCHECK(xwalk::XWalkRunnerEfl::GetInstance()->GetDelegate());
+  runtime = xwalk::XWalkRunnerEfl::GetInstance()->GetDelegate();
+  web_contents_ = &(runtime->web_contents());
+#endif
   render_process_host_ = runtime->GetRenderProcessHost();
   render_process_host_->AddObserver(this);
-  web_contents_ = runtime->web_contents();
   InitSecurityPolicy();
   runtime->LoadURL(url);
 
+#if !defined(XWALK_EFL)
   NativeAppWindow::CreateParams params;
   params.net_wm_pid = launch_params.launcher_pid;
   params.state = is_wgt ?
@@ -242,6 +255,7 @@ bool Application::Launch(const LaunchParams& launch_params) {
   runtime->set_ui_delegate(DefaultRuntimeUIDelegate::Create(runtime, params));
   // We call "Show" after RP is initialized to reduce
   // the application start up time.
+#endif
 
   return true;
 }
@@ -257,9 +271,11 @@ GURL Application::GetAbsoluteURLFromKey(const std::string& key) {
 }
 
 void Application::Terminate() {
+#if !defined(XWALK_EFL)
   std::vector<Runtime*> to_be_closed(runtimes_.get());
   for (Runtime* runtime : to_be_closed)
     runtime->Close();
+#endif
 }
 
 int Application::GetRenderProcessHostID() const {
@@ -267,6 +283,7 @@ int Application::GetRenderProcessHostID() const {
   return render_process_host_->GetID();
 }
 
+#if !defined(XWALK_EFL)
 void Application::OnNewRuntimeAdded(Runtime* runtime) {
   runtime->set_remote_debugging_enabled(remote_debugging_enabled_);
   runtime->set_observer(this);
@@ -287,6 +304,7 @@ void Application::OnRuntimeClosed(Runtime* runtime) {
         base::Bind(&Application::NotifyTermination,
                    weak_factory_.GetWeakPtr()));
 }
+#endif
 
 void Application::RenderProcessExited(RenderProcessHost* host,
                                       base::ProcessHandle,
@@ -309,10 +327,12 @@ void Application::NotifyTermination() {
     observer_->OnApplicationTerminated(this);
 }
 
+#if !defined(XWALK_EFL)
 void Application::RenderChannelCreated() {
   CHECK(!runtimes_.empty());
   runtimes_.front()->Show();
 }
+#endif
 
 bool Application::UseExtension(const std::string& extension_name) const {
   // TODO(Bai): Tells whether the application contains the specified extension

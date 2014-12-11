@@ -3,6 +3,7 @@
     'xwalk_product_name': 'XWalk',
     'xwalk_version': '<!(python ../build/util/version.py -f VERSION -t "@MAJOR@.@MINOR@.@BUILD@.@PATCH@")',
     'chrome_version': '<!(python ../build/util/version.py -f ../chrome/VERSION -t "@MAJOR@.@MINOR@.@BUILD@.@PATCH@")',
+    'xwalk_efl%': 0,
     'conditions': [
       ['OS=="win" or OS=="mac"', {
         'disable_nacl': 1,
@@ -588,7 +589,6 @@
       'mac_bundle': 1,
       'defines!': ['CONTENT_IMPLEMENTATION'],
       'dependencies': [
-        'xwalk_runtime',
         'xwalk_pak',
       ],
       'include_dirs': [
@@ -616,6 +616,26 @@
         },
       },
       'conditions': [
+         ['xwalk_efl==1',{
+          'dependencies':[
+            '../tizen_src/ewk/chromium-ewk.gyp:chromium-ewk',
+            '../tizen_src/impl/chromium-efl-deps.gyp:efl',
+            '../tizen_src/impl/chromium-efl.gyp:chromium-efl',
+          ],
+          'include_dirs': [
+            '<(efl_impl_dir)',
+            '<(efl_impl_dir)/../ewk/efl_integration',
+            '<(efl_impl_dir)/../ewk/efl_integration/public',
+          ],
+          'sources': [
+            'runtime/browser/ui/native_app_window_efl.cc',
+            'runtime/browser/ui/native_app_window_efl.h',
+          ],
+        },{ # xwalk_efl==0
+          'dependencies':[
+            'xwalk_runtime',
+          ],
+        }],
         ['OS=="win" and win_use_allocator_shim==1', {
           'dependencies': [
             '../base/allocator/allocator.gyp:allocator',

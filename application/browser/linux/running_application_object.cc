@@ -12,7 +12,9 @@
 #include "dbus/bus.h"
 #include "dbus/message.h"
 #include "dbus/exported_object.h"
+#if defined(OS_TIZEN)
 #include "xwalk/application/browser/application_tizen.h"
+#endif
 #include "xwalk/application/browser/linux/running_applications_manager.h"
 
 namespace {
