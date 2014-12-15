@@ -16,10 +16,10 @@
 #include "sandbox/win/src/sandbox_types.h"
 #endif
 
-#else
-#include "public/ewk_context.h"
-#include "public/ewk_main.h"
-#include "public/ewk_view.h"
+#else // XWALK_EFL
+#include "ewk/efl_integration/public/ewk_context.h"
+#include "ewk/efl_integration/public/ewk_main.h"
+#include "ewk/efl_integration/public/ewk_view.h"
 #include "xwalk/runtime/browser/ui/native_app_window.h"
 #include "xwalk/runtime/browser/ui/native_app_window_efl.h"
 #endif // XWALK_EFL

@@ -71,10 +71,10 @@
         }],
         ['xwalk_efl==1',{
           'dependencies':[
-            '../tizen_src/impl/chromium-efl-deps.gyp:efl',
+            '<(efl_impl_dir)/chromium-efl-deps.gyp:efl',
           ],
           'include_dirs': [
-            '../../tizen_src/impl',
+            '<(efl_impl_dir)',
           ],
         }],
       ],

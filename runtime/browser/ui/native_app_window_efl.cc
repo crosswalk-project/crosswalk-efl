@@ -7,9 +7,9 @@
 #include "content/public/browser/notification_service.h"
 #include "content/public/browser/web_contents.h"
 #include "ui/gfx/screen.h"
-#include "ewk_context.h"
-#include "ewk_main.h"
-#include "ewk_view.h"
+#include "ewk/efl_integration/public/ewk_context.h"
+#include "ewk/efl_integration/public/ewk_main.h"
+#include "ewk/efl_integration/public/ewk_view.h"
 
 #include "xwalk/runtime/common/xwalk_notification_types.h"
 #include "xwalk/runtime/browser/xwalk_runner.h"

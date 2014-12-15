@@ -405,6 +405,16 @@
       'include_dirs': [
         '..',
       ],
+      'conditions': [
+      ['xwalk_efl==1',{
+        'dependencies':[
+          '../tizen_src/impl/chromium-efl-deps.gyp:efl',
+        ],
+        'include_dirs': [
+          '<(efl_impl_dir)',
+        ],
+      }],
+      ],
       'sources': [
         'runtime/browser/application_component.cc',
         'runtime/browser/application_component.h',
@@ -618,16 +628,22 @@
       'conditions': [
          ['xwalk_efl==1',{
           'dependencies':[
-            '../tizen_src/ewk/chromium-ewk.gyp:chromium-ewk',
-            '../tizen_src/impl/chromium-efl-deps.gyp:efl',
-            '../tizen_src/impl/chromium-efl.gyp:chromium-efl',
+            '<(efl_impl_dir)/../ewk/chromium-ewk.gyp:chromium-ewk',
+            '<(efl_impl_dir)/chromium-efl-deps.gyp:efl',
+            '<(chrome_src_dir)/content/content.gyp:content',
           ],
           'include_dirs': [
             '<(efl_impl_dir)',
-            '<(efl_impl_dir)/../ewk/efl_integration',
-            '<(efl_impl_dir)/../ewk/efl_integration/public',
+            '<(efl_impl_dir)/..',
           ],
+          'link_settings': {
+            'ldflags': [
+              '-Llib -lchromium-efl',
+            ],
+          },
           'sources': [
+            # TODO(tonikitoo): Consider moving this additions out of xwalk,
+            # into tizen_src. Much of the code above could be simplified.
             'runtime/browser/ui/native_app_window_efl.cc',
             'runtime/browser/ui/native_app_window_efl.h',
           ],
