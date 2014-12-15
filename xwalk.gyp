@@ -42,7 +42,6 @@
         '../media/media.gyp:media',
         '../net/net.gyp:net',
         '../net/net.gyp:net_resources',
-        '../skia/skia.gyp:skia',
         '../storage/storage_browser.gyp:storage',
         '../storage/storage_common.gyp:storage_common',
         '../third_party/WebKit/public/blink.gyp:blink',
@@ -52,6 +51,7 @@
         '../ui/snapshot/snapshot.gyp:snapshot',
         '../url/url.gyp:url_lib',
         '../v8/tools/gyp/v8.gyp:v8',
+        'xwalk_runtime_base',
         'generate_upstream_blink_version',
         'xwalk_application_lib',
         'xwalk_resources',
@@ -260,9 +260,6 @@
         'runtime/renderer/xwalk_render_process_observer_generic.cc',
         'runtime/renderer/xwalk_render_process_observer_generic.h',
       ],
-      'includes': [
-        'xwalk_runtime_features.gypi',
-      ],
       'msvs_settings': {
         'VCLinkerTool': {
           'SubSystem': '2',  # Set /SUBSYSTEM:WINDOWS
@@ -399,6 +396,47 @@
             ['exclude', '^runtime/renderer/pepper/'],
           ],
         }],
+      ],
+    },
+    {
+      'target_name': 'xwalk_runtime_base',
+      'type': '<(component)',
+      'include_dirs': [
+        '..',
+      ],
+      'sources': [
+        'runtime/browser/application_component.cc',
+        'runtime/browser/application_component.h',
+        'runtime/browser/xwalk_browser_context.cc',
+        'runtime/browser/xwalk_browser_context.h',
+        'runtime/browser/runtime_download_manager_delegate.cc',
+        'runtime/browser/runtime_download_manager_delegate.h',
+        'runtime/browser/runtime_network_delegate.cc',
+        'runtime/browser/runtime_network_delegate.h',
+        'runtime/browser/runtime_url_request_context_getter.cc',
+        'runtime/browser/runtime_url_request_context_getter.h',
+        'runtime/browser/storage_component.cc',
+        'runtime/browser/storage_component.h',
+        'runtime/browser/sysapps_component.cc',
+        'runtime/browser/sysapps_component.h',
+        'runtime/browser/ui/native_app_window.cc',
+        'runtime/browser/ui/native_app_window.h',
+        'runtime/common/xwalk_common_messages.cc',
+        'runtime/common/xwalk_common_messages.h',
+        'runtime/common/xwalk_common_message_generator.cc',
+        'runtime/common/xwalk_common_message_generator.h',
+        'runtime/common/xwalk_runtime_features.h',
+        'runtime/common/xwalk_runtime_features.cc',
+        'runtime/common/xwalk_switches.h"',
+        'runtime/common/xwalk_switches.cc',
+        'runtime/common/xwalk_system_locale.cc',
+        'runtime/common/xwalk_system_locale.h',
+      ],
+      'dependencies': [
+        '../skia/skia.gyp:skia',
+      ],
+      'includes': [
+        'xwalk_jsapi.gypi',
       ],
     },
     {
