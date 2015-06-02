@@ -343,7 +343,8 @@ if __name__ == '__main__':
     args.append('-Duse_openmax_dl_fft=1')
 
   # Enable Aura by default on all platforms except Android and Mac.
-  if gyp_vars_dict.get('OS') != 'android' and sys.platform not in ('darwin',):
+  use_efl = ('use_efl' in gyp_vars_dict and gyp_vars_dict['use_efl'] == "1")
+  if gyp_vars_dict.get('OS') != 'android' and sys.platform not in ('darwin',) and not use_efl:
     args.append('-Duse_aura=1')
 
   if gyp_vars_dict.get('OS') == 'android':

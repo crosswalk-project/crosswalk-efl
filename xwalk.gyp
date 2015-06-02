@@ -172,6 +172,7 @@
         'runtime/browser/runtime_platform_util.h',
         'runtime/browser/runtime_platform_util_android.cc',
         'runtime/browser/runtime_platform_util_aura.cc',
+        'runtime/browser/runtime_platform_util_efl.cc',
         'runtime/browser/runtime_platform_util_linux.cc',
         'runtime/browser/runtime_platform_util_mac.mm',
         'runtime/browser/runtime_platform_util_tizen.cc',
@@ -403,6 +404,20 @@
           'dependencies': [
             '../ui/aura/aura.gyp:aura',
             '../ui/base/ime/ui_base_ime.gyp:ui_base_ime',
+          ],
+        }],
+        ['use_efl==1', {
+          'dependencies': [
+            '<(DEPTH)/tizen_src/build/system.gyp:ecore-x',
+            '<(DEPTH)/tizen_src/build/system.gyp:elementary',
+          ],
+          'sources': [
+            'runtime/browser/ui/native_app_window_efl.cc',
+            'runtime/browser/ui/native_app_window_efl.h',
+          ],
+          'sources!': [
+            'runtime/browser/ui/native_app_window_tizen.cc',
+            'runtime/browser/ui/native_app_window_tizen.h',
           ],
         }],
         ['OS=="linux" and use_libnotify==1', {
@@ -652,6 +667,11 @@
             '../sandbox/sandbox.gyp:sandbox',
           ],
         }],  # OS=="win"
+        ['use_efl==1', {
+          'dependencies': [
+            '<(DEPTH)/tizen_src/chromium_impl/efl/efl.gyp:efl-init',
+          ],
+        }],
         ['OS=="mac"', {
           'product_name': '<(xwalk_product_name)',
           'dependencies!': [

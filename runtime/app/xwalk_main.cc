@@ -10,6 +10,10 @@
 #include "xwalk/runtime/app/xwalk_content_main.h"
 #endif
 
+#if defined(USE_EFL)
+#include "efl/init.h"
+#endif
+
 #if defined(OS_WIN)
 #include "content/public/app/startup_helper_win.h"
 #include "sandbox/win/src/sandbox_types.h"
@@ -19,6 +23,10 @@
 int APIENTRY wWinMain(HINSTANCE instance, HINSTANCE, wchar_t*, int) {
 #else
 int main(int argc, const char** argv) {
+#endif
+#if defined(USE_EFL)
+  if (efl::Initialize(argc, argv))
+    return 1;
 #endif
 #if defined(OS_MACOSX)
     // Do the delegate work in xwalk_content_main to avoid having to export the
