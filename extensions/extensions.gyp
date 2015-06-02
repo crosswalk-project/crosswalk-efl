@@ -11,6 +11,8 @@
         '../../v8/tools/gyp/v8.gyp:v8',
         '../../third_party/WebKit/public/blink.gyp:blink',
         'extensions_resources.gyp:xwalk_extensions_resources',
+        '<(DEPTH)/tizen_src/build/system.gyp:ecore-x',
+        '<(DEPTH)/tizen_src/build/system.gyp:elementary',
       ],
       'includes': [
         '../../build/filename_rules.gypi',
