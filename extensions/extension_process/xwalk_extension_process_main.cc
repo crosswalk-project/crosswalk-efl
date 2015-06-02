@@ -4,10 +4,11 @@
 
 #include "xwalk/extensions/extension_process/xwalk_extension_process_main.h"
 
-#if defined(OS_LINUX)
+#if defined(USE_EFL)
+#include "base/message_loop/message_pump_ecore.h"
+#elif defined(OS_LINUX)
 #include <signal.h>
 #include <sys/prctl.h>
-
 #include "base/message_loop/message_pump_glib.h"
 #endif
 
@@ -23,7 +24,10 @@ int XWalkExtensionProcessMain(const content::MainFunctionParams& parameters) {
 
   VLOG(1) << "Extension process running!";
 
-#if defined(OS_LINUX)
+#if defined(USE_EFL)
+  base::MessageLoop main_message_loop(
+      make_scoped_ptr<base::MessagePump>(new base::MessagePumpEcore()));
+#elif defined(OS_LINUX)
   // FIXME(jeez): This fixes the zombie-process-on-^C issue that we are facing
   // on Linux. However, we must find a cleaner way of doing this, perhaps using
   // something from Chromium and ensuring this process dies when its parent die.
