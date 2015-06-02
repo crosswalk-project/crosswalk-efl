@@ -33,13 +33,20 @@ void RuntimeUIDelegateDesktop::OnStopPressed() {
 }
 
 void RuntimeUIDelegateDesktop::SetLoadProgress(double progress) {
-  if (NativeAppWindowDesktop* window = ToNativeAppWindowDesktop(GetAppWindow()))
+#if defined(USE_EFL)
+#else
+  if (NativeAppWindowDesktop* window = ToNativeAppWindowDesktop(GetAppWindow())) {
     window->SetLoadProgress(progress);
+  }
+#endif
 }
 
 void RuntimeUIDelegateDesktop::SetAddressURL(const GURL& url) {
+#if defined(USE_EFL)
+#else
   if (NativeAppWindowDesktop* window = ToNativeAppWindowDesktop(GetAppWindow()))
     window->SetAddressURL(url.spec());
+#endif
 }
 
 }  // namespace xwalk
