@@ -6,8 +6,6 @@
 #ifndef XWALK_RUNTIME_BROWSER_XWALK_PLATFORM_NOTIFICATION_SERVICE_H_
 #define XWALK_RUNTIME_BROWSER_XWALK_PLATFORM_NOTIFICATION_SERVICE_H_
 
-#include <string>
-
 #include "base/memory/singleton.h"
 #include "content/public/browser/platform_notification_service.h"
 
@@ -51,7 +49,7 @@ class XWalkPlatformNotificationService
       const content::PlatformNotificationData& notification_data) override {}
   void ClosePersistentNotification(
       content::BrowserContext* browser_context,
-      const std::string& persistent_notification_id) override {}
+      int64_t persistent_notification_id) override {}
 
  private:
   friend struct DefaultSingletonTraits<XWalkPlatformNotificationService>;
