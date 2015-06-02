@@ -45,6 +45,10 @@
 #include "ui/base/ime/input_method_initializer.h"
 #endif
 
+#if defined(USE_EFL)
+#include "efl/init.h"
+#endif
+
 namespace {
 
 // FIXME: Compare with method in startup_browser_creator.cc.
@@ -119,6 +123,10 @@ void XWalkBrowserMainParts::PreMainMessageLoopStart() {
         command_line->GetSwitchValueASCII(switches::kJavaScriptFlags);
   }
   command_line->AppendSwitchASCII(switches::kJavaScriptFlags, js_flags);
+
+#if defined(USE_EFL)
+  efl::AppendPortParams(*command_line);
+#endif
 
   startup_url_ = GetURLFromCommandLine(*command_line);
 }
