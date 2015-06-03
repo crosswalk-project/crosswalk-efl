@@ -124,7 +124,7 @@ bool TizenSystemIndicatorWatcher::Connect() {
                       .Append(service_name_)
                       .Append(kServiceNumber));
   bool success = IPC::CreateClientUnixDomainSocket(path, &fd_);
-  fd_closer_.reset(&fd_);
+  fd_closer_.reset(fd_);
   return success;
 }
 
@@ -499,7 +499,7 @@ bool TizenSystemIndicatorWatcher::ProcessPayload() {
 void TizenSystemIndicatorWatcher::UpdateIndicatorImage() {
   SkBitmap bitmap;
 
-  bitmap.setConfig(SkBitmap::kARGB_8888_Config, width_, height_);
+  bitmap.setInfo(SkImageInfo::MakeN32Premul(width_, height_));
   bitmap.setPixels(shared_memory_->memory());
 
   gfx::ImageSkia img_skia;
