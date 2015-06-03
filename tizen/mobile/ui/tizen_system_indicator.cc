@@ -81,7 +81,6 @@ void TizenSystemIndicator::OnGestureEvent(ui::GestureEvent* event) {
     case ui::ET_TOUCH_MOVED:
       watcher_->OnMouseMove(position.x(), position.y());
       break;
-    case ui::ET_TOUCH_STATIONARY:
     case ui::ET_TOUCH_CANCELLED:
     case ui::ET_DROP_TARGET_EVENT:
     case ui::ET_TRANSLATED_KEY_PRESS:
@@ -92,6 +91,8 @@ void TizenSystemIndicator::OnGestureEvent(ui::GestureEvent* event) {
     case ui::ET_GESTURE_TAP:
     case ui::ET_GESTURE_TAP_DOWN:
     case ui::ET_GESTURE_TAP_CANCEL:
+    case ui::ET_GESTURE_TAP_UNCONFIRMED:
+    case ui::ET_GESTURE_DOUBLE_TAP:
     case ui::ET_GESTURE_BEGIN:
     case ui::ET_GESTURE_END:
     case ui::ET_GESTURE_TWO_FINGER_TAP:
@@ -100,7 +101,7 @@ void TizenSystemIndicator::OnGestureEvent(ui::GestureEvent* event) {
     case ui::ET_GESTURE_PINCH_UPDATE:
     case ui::ET_GESTURE_LONG_PRESS:
     case ui::ET_GESTURE_LONG_TAP:
-    case ui::ET_GESTURE_MULTIFINGER_SWIPE:
+    case ui::ET_GESTURE_SWIPE:
     case ui::ET_GESTURE_SHOW_PRESS:
     case ui::ET_SCROLL:
     case ui::ET_SCROLL_FLING_START:
