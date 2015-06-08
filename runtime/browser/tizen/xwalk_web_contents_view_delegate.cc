@@ -37,8 +37,10 @@ scoped_ptr<RenderViewContextMenuImpl> BuildMenu(
   // This happens if the frame has navigated to a different page before
   // ContextMenu message was received by the current RenderFrameHost.
   if (focused_frame) {
+#if defined(USE_AURA)
     menu.reset(new RenderViewContextMenuImpl(focused_frame, params));
     menu->Init();
+#endif
   }
   return menu.Pass();
 }
@@ -114,6 +116,7 @@ void XWalkWebContentsViewDelegate::ShowMenu(
   context_menu_->Show();
 }
 
+#if defined(USE_AURA)
 aura::Window* XWalkWebContentsViewDelegate::GetActiveNativeView() {
   return web_contents_->GetFullscreenRenderWidgetHostView()
       ? web_contents_->GetFullscreenRenderWidgetHostView()
@@ -129,6 +132,7 @@ views::FocusManager* XWalkWebContentsViewDelegate::GetFocusManager() {
   views::Widget* toplevel_widget = GetTopLevelWidget();
   return toplevel_widget ? toplevel_widget->GetFocusManager() : NULL;
 }
+#endif
 
 void XWalkWebContentsViewDelegate::SetInitialFocus() {
   if (web_contents_->FocusLocationBarByDefault()) {
