@@ -22,7 +22,13 @@
 #include "xwalk/runtime/browser/xwalk_browser_context.h"
 #include "xwalk/runtime/browser/runtime_url_request_context_getter.h"
 #include "xwalk/runtime/browser/ui/native_app_window.h"
+
+#if defined(USE_EFL)
+#include "xwalk/runtime/browser/ui/native_app_window_efl.h"
+#else
 #include "xwalk/runtime/browser/ui/native_app_window_tizen.h"
+#endif
+
 #include "xwalk/runtime/common/xwalk_common_messages.h"
 
 #include "content/public/browser/render_view_host.h"
@@ -48,8 +54,8 @@ namespace {
 #if defined(OS_TIZEN_MOBILE)
 void ApplyRootWindowParams(Runtime* runtime,
                            NativeAppWindow::CreateParams* params) {
-  if (!params->delegate)
-    params->delegate = runtime;
+  if (!params->web_contents)
+    params->web_contents = runtime->web_contents();
   if (params->bounds.IsEmpty())
     params->bounds = gfx::Rect(0, 0, 840, 600);
 
@@ -151,7 +157,10 @@ ApplicationTizen::ApplicationTizen(
       root_window_(NULL),
 #endif
       is_suspended_(false) {
-  ui::PlatformEventSource::GetInstance()->AddPlatformEventObserver(this);
+
+  if (ui::PlatformEventSource::GetInstance())
+    ui::PlatformEventSource::GetInstance()->AddPlatformEventObserver(this);
+
   cookie_manager_ = scoped_ptr<CookieManager>(
       new CookieManager(id(), browser_context_));
 }

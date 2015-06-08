@@ -13,6 +13,8 @@
         '../../../url/url.gyp:url_lib',
         '../../../third_party/libxml/libxml.gyp:libxml',
         '../../../third_party/zlib/google/zip.gyp:zip',
+        # needed to avoid link error
+        '../../../sandbox/sandbox.gyp:sandbox',
       ],
       'sources': [
         'application_data.cc',

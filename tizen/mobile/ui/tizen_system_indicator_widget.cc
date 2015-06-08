@@ -21,6 +21,7 @@ TizenSystemIndicatorWidget::TizenSystemIndicatorWidget()
 
 TizenSystemIndicatorWidget::~TizenSystemIndicatorWidget() {}
 
+#if defined(USE_AURA)
 void TizenSystemIndicatorWidget::Initialize(gfx::NativeView parent) {
   views::Widget::InitParams params;
   params.parent = parent;
@@ -31,6 +32,7 @@ void TizenSystemIndicatorWidget::Initialize(gfx::NativeView parent) {
   SetContentsView(indicator_.get());
   Show();
 }
+#endif
 
 void TizenSystemIndicatorWidget::OnImageUpdated(
     const gfx::ImageSkia& img_skia) {
