@@ -10,6 +10,7 @@
 #include "ui/views/background.h"
 #include "ui/views/widget/native_widget.h"
 #include "ui/views/widget/root_view.h"
+#include "ui/aura/root_window.h"
 
 namespace {
 
@@ -33,6 +34,11 @@ bool TizenSystemIndicator::IsConnected() const {
 
 void TizenSystemIndicator::SetWatcher(TizenSystemIndicatorWatcher* watcher) {
   watcher_ = watcher;
+}
+
+gfx::Size TizenSystemIndicator::GetPreferredSize() {
+  // The size must be in DIPs. SkiaImage handles that and null images.
+  return GetImage().size();
 }
 
 bool TizenSystemIndicator::OnMousePressed(const ui::MouseEvent& event) {

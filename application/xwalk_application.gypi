@@ -55,11 +55,6 @@
             'browser/application_system_tizen.h',
           ],
         }],
-        ['use_efl==1', {
-          'dependencies': [
-            '<(DEPTH)/tizen_src/build/system.gyp:evas',
-          ],
-        }],
       ],
       'include_dirs': [
         '..',

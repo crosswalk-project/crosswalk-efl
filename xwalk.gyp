@@ -328,17 +328,13 @@
           'sources': [
             'runtime/browser/tizen/xwalk_web_contents_view_delegate.cc',
             'runtime/browser/tizen/xwalk_web_contents_view_delegate.h',
+            'runtime/browser/tizen/render_view_context_menu_impl.cc',
+            'runtime/browser/tizen/render_view_context_menu_impl.h',
           ],
           'sources!':[
             'runtime/browser/runtime_platform_util_linux.cc',
             'runtime/browser/android/xwalk_web_contents_view_delegate.cc',
             'runtime/browser/android/xwalk_web_contents_view_delegate.h',
-          ],
-        }],
-        ['use_aura==1', {
-          'sources': [
-            'runtime/browser/tizen/render_view_context_menu_impl.cc',
-            'runtime/browser/tizen/render_view_context_menu_impl.h',
           ],
         }],
         ['OS=="android"',{

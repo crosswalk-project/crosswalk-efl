@@ -21,9 +21,7 @@ class TizenSystemIndicatorWidget : public views::Widget,
   TizenSystemIndicatorWidget();
   ~TizenSystemIndicatorWidget() override;
 
-#if defined(USE_AURA)
   void Initialize(aura::Window* parent);
-#endif
 
   // TizenSystemIndicatorWatcher::WatcherClient implementation.
   void OnImageUpdated(const gfx::ImageSkia& img_skia) override;

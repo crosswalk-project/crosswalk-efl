@@ -23,6 +23,9 @@ class TizenSystemIndicator : public views::ImageView {
 
   void SetWatcher(TizenSystemIndicatorWatcher* watcher);
 
+  // views::View implementation.
+  gfx::Size GetPreferredSize() const override;
+
  private:
   bool OnMousePressed(const ui::MouseEvent& event) override;
   void OnMouseReleased(const ui::MouseEvent& event) override;

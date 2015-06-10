@@ -49,11 +49,9 @@ class XWalkWebContentsViewDelegate : public content::WebContentsViewDelegate {
 #endif
 
  private:
-#if defined(USE_AURA)
   aura::Window* GetActiveNativeView();
   views::Widget* GetTopLevelWidget();
   views::FocusManager* GetFocusManager();
-#endif // USE_AURA
   void SetInitialFocus();
   void ShowMenu(scoped_ptr<RenderViewContextMenuImpl> menu);
 

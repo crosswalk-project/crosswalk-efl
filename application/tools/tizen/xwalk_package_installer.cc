@@ -65,7 +65,7 @@ const base::FilePath::CharType kUpdateTempDir[] =
 namespace widget_keys = xwalk::application_widget_keys;
 
 inline base::FilePath GetXWalkBinaryPath() {
-#if defined(__x86_64__) || defined(__aarch64__)
+#if defined(__x86_64__)
   return base::FilePath("/usr/lib64/xwalk/xwalk");
 #else
   return base::FilePath("/usr/lib/xwalk/xwalk");
