@@ -45,6 +45,7 @@
             'build/system.gyp:tizen_appcore_common',
             'tizen/xwalk_tizen.gypi:xwalk_tizen_lib',
             '<(DEPTH)/ui/events/platform/events_platform.gyp:events_platform',
+            '<(DEPTH)/ui/events/events.gyp:events',
           ],
           'sources': [
             'browser/application_tizen.cc',
