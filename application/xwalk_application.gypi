@@ -4,14 +4,6 @@
       'target_name': 'xwalk_application_lib',
       'type': 'static_library',
       'dependencies': [
-        '../base/base.gyp:base',
-        '../content/content.gyp:content_browser',
-        '../crypto/crypto.gyp:crypto',
-        '../ipc/ipc.gyp:ipc',
-        '../ui/base/ui_base.gyp:ui_base',
-        '../url/url.gyp:url_lib',
-        '../third_party/WebKit/public/blink.gyp:blink',
-        '../third_party/zlib/google/zip.gyp:zip',
         'xwalk_application_resources',
         'application/common/xwalk_application_common.gypi:xwalk_application_common_lib',
         '../third_party/libxml/libxml.gyp:libxml',
@@ -39,13 +31,35 @@
         'renderer/application_native_module.h',
       ],
       'conditions': [
+        ['xwalk_link_against_chromium_ewk==0', {
+          'dependencies': [
+            '../base/base.gyp:base',
+            '../content/content.gyp:content_browser',
+            '../crypto/crypto.gyp:crypto',
+            '../ipc/ipc.gyp:ipc',
+            '../ui/base/ui_base.gyp:ui_base',
+            '../url/url.gyp:url_lib',
+            '../third_party/WebKit/public/blink.gyp:blink',
+            '../third_party/zlib/google/zip.gyp:zip',
+          ],
+        } , {
+          'include_dirs': [
+            '<(DEPTH)/third_party/WebKit',
+            '<(DEPTH)/third_party/skia/include/config/',
+            '<(DEPTH)/third_party/mojo/src/',
+          ],
+        }],
+        ['tizen==1 and xwalk_link_against_chromium_ewk==0', {
+          'dependencies': [
+            '<(DEPTH)/ui/events/platform/events_platform.gyp:events_platform',
+            '<(DEPTH)/ui/events/events.gyp:events',
+          ],
+        }],
         ['tizen==1', {
           'dependencies': [
             'build/system.gyp:tizen',
             'build/system.gyp:tizen_appcore_common',
             'tizen/xwalk_tizen.gypi:xwalk_tizen_lib',
-            '<(DEPTH)/ui/events/platform/events_platform.gyp:events_platform',
-            '<(DEPTH)/ui/events/events.gyp:events',
           ],
           'sources': [
             'browser/application_tizen.cc',

@@ -4,17 +4,8 @@
       'target_name': 'xwalk_application_common_lib',
       'type': 'static_library',
       'dependencies': [
-        '../../../base/base.gyp:base',
-        '../../../base/base.gyp:base_i18n',
-        '../../../content/content.gyp:content_common',
-        '../../../crypto/crypto.gyp:crypto',
-        '../../../net/net.gyp:net',
-        '../../../sql/sql.gyp:sql',
-        '../../../url/url.gyp:url_lib',
         '../../../third_party/libxml/libxml.gyp:libxml',
         '../../../third_party/zlib/google/zip.gyp:zip',
-        # needed to avoid link error
-        '../../../sandbox/sandbox.gyp:sandbox',
       ],
       'sources': [
         'application_data.cc',
@@ -52,14 +43,34 @@
         'package/xpk_package.h',
       ],
       'conditions': [
-        ['tizen==1', {
+        ['xwalk_link_against_chromium_ewk==0', {
+          'dependencies': [
+            '../../../base/base.gyp:base',
+            '../../../base/base.gyp:base_i18n',
+            '../../../content/content.gyp:content_common',
+            '../../../crypto/crypto.gyp:crypto',
+            '../../../net/net.gyp:net',
+            '../../../sql/sql.gyp:sql',
+            '../../../url/url.gyp:url_lib',
+            # needed to avoid link error
+            '../../../sandbox/sandbox.gyp:sandbox',
+          ],
+        }],
+        ['tizen==1 and xwalk_link_against_chromium_ewk==0', {
           'dependencies': [
             '../../../base/base.gyp:xdg_mime',
+            '../../../net/net.gyp:net',
+          ],
+        }],
+        ['tizen==1', {
+          'dependencies': [
             '../../build/system.gyp:tizen',
             '../../build/system.gyp:xmlsec',
             '../../tizen/xwalk_tizen.gypi:xwalk_tizen_lib',
             '../../../third_party/re2/re2.gyp:re2',
-            '../../../net/net.gyp:net',
+          ],
+          'include_dirs': [
+            '<(DEPTH)/third_party/mojo/src/',
           ],
           'sources': [
             'manifest_handlers/tizen_app_control_handler.cc',

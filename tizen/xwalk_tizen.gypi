@@ -4,7 +4,6 @@
     'target_name': 'xwalk_tizen_lib',
     'type': 'static_library',
     'dependencies': [
-      '../../skia/skia.gyp:skia',
       '../build/system.gyp:tizen_sensor',
       '../build/system.gyp:tizen_vibration',
     ],
@@ -24,9 +23,24 @@
       # 'browser/vibration/vibration_provider_tizen.h',
     ],
     'conditions': [
-      [ 'tizen_mobile == 1', {
+      ['xwalk_link_against_chromium_ewk==0', {
         'dependencies': [
-          '../../ui/base/ui_base.gyp:ui_base',
+          '../../skia/skia.gyp:skia',
+        ],
+      }],
+      [ 'tizen_mobile == 1', {
+        'conditions': [
+          ['xwalk_link_against_chromium_ewk==0', {
+            'dependencies': [
+              '../../ui/base/ui_base.gyp:ui_base',
+            ],
+          } , {
+            'include_dirs': [
+              '..',
+              '<(DEPTH)/third_party/skia/include/config/',
+              '<(DEPTH)/third_party/skia/include/core/',
+            ],
+          }],
         ],
         'sources': [
           'mobile/ui/tizen_plug_message_writer.cc',

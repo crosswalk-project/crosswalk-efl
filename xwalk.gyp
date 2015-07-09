@@ -27,37 +27,6 @@
         'chromium_code': 1,
       },
       'dependencies': [
-        '../base/base.gyp:base',
-        '../base/base.gyp:base_i18n',
-        '../base/third_party/dynamic_annotations/dynamic_annotations.gyp:dynamic_annotations',
-        '../cc/cc.gyp:cc',
-        '../components/components.gyp:autofill_content_renderer',
-        '../components/components.gyp:visitedlink_browser',
-        '../components/components.gyp:visitedlink_renderer',
-        '../content/content.gyp:content',
-        '../content/content.gyp:content_app_both',
-        '../content/content.gyp:content_browser',
-        '../content/content.gyp:content_common',
-        '../content/content.gyp:content_gpu',
-        '../content/content.gyp:content_plugin',
-        '../content/content.gyp:content_ppapi_plugin',
-        '../content/content.gyp:content_renderer',
-        '../content/content.gyp:content_utility',
-        '../gin/gin.gyp:gin',
-        '../ipc/ipc.gyp:ipc',
-        '../media/media.gyp:media',
-        '../net/net.gyp:net',
-        '../net/net.gyp:net_resources',
-        '../skia/skia.gyp:skia',
-        '../storage/storage_browser.gyp:storage',
-        '../storage/storage_common.gyp:storage_common',
-        '../third_party/WebKit/public/blink.gyp:blink',
-        '../ui/base/ui_base.gyp:ui_base',
-        '../ui/gl/gl.gyp:gl',
-        '../ui/shell_dialogs/shell_dialogs.gyp:shell_dialogs',
-        '../ui/snapshot/snapshot.gyp:snapshot',
-        '../url/url.gyp:url_lib',
-        '../v8/tools/gyp/v8.gyp:v8',
         'generate_upstream_blink_version',
         'xwalk_application_lib',
         'xwalk_resources',
@@ -310,20 +279,66 @@
         },
       },
       'conditions': [
-        ['tizen==1', {
+        ['xwalk_link_against_chromium_ewk==0', {
+          'dependencies': [
+            '../base/base.gyp:base',
+            '../base/base.gyp:base_i18n',
+            '../base/third_party/dynamic_annotations/dynamic_annotations.gyp:dynamic_annotations',
+            '../cc/cc.gyp:cc',
+            '../components/components.gyp:autofill_content_renderer',
+            '../components/components.gyp:visitedlink_browser',
+            '../components/components.gyp:visitedlink_renderer',
+            '../content/content.gyp:content',
+            '../content/content.gyp:content_app_both',
+            '../content/content.gyp:content_browser',
+            '../content/content.gyp:content_common',
+            '../content/content.gyp:content_gpu',
+            '../content/content.gyp:content_plugin',
+            '../content/content.gyp:content_ppapi_plugin',
+            '../content/content.gyp:content_renderer',
+            '../content/content.gyp:content_utility',
+            '../gin/gin.gyp:gin',
+            '../ipc/ipc.gyp:ipc',
+            '../media/media.gyp:media',
+            '../net/net.gyp:net',
+            '../net/net.gyp:net_resources',
+            '../skia/skia.gyp:skia',
+            '../storage/storage_browser.gyp:storage',
+            '../storage/storage_common.gyp:storage_common',
+            '../third_party/WebKit/public/blink.gyp:blink',
+            '../ui/base/ui_base.gyp:ui_base',
+            '../ui/gl/gl.gyp:gl',
+            '../ui/shell_dialogs/shell_dialogs.gyp:shell_dialogs',
+            '../ui/snapshot/snapshot.gyp:snapshot',
+            '../url/url.gyp:url_lib',
+            '../v8/tools/gyp/v8.gyp:v8',
+          ],
+        } , {
+          'include_dirs': [
+            '<(DEPTH)/third_party/skia/include/config/',
+            '<(DEPTH)/third_party/skia/include/core/',
+            '<(DEPTH)/third_party/WebKit/',
+            '<(DEPTH)/third_party/mojo/src/',
+          ],
+        }],
+        ['tizen==1 and xwalk_link_against_chromium_ewk==0', {
           'dependencies': [
             '../content/app/resources/content_resources.gyp:content_resources',
             '../ui/compositor/compositor.gyp:compositor',
-            'build/system.gyp:tizen_geolocation',
-            'build/system.gyp:tizen_tzplatform_config',
-            'sysapps/sysapps_resources.gyp:xwalk_sysapps_resources',
-            'tizen/xwalk_tizen.gypi:xwalk_tizen_lib',
-            '<(DEPTH)/third_party/jsoncpp/jsoncpp.gyp:jsoncpp',
             '../components/components.gyp:web_modal',
             '../components/components.gyp:renderer_context_menu',
 
             # https://code.google.com/p/chromium/issues/detail?id=449919#c30
             '../extensions/extensions.gyp:extensions_browser',
+          ],
+        }],
+        ['tizen==1', {
+          'dependencies': [
+            'build/system.gyp:tizen_geolocation',
+            'build/system.gyp:tizen_tzplatform_config',
+            'sysapps/sysapps_resources.gyp:xwalk_sysapps_resources',
+            'tizen/xwalk_tizen.gypi:xwalk_tizen_lib',
+            '<(DEPTH)/third_party/jsoncpp/jsoncpp.gyp:jsoncpp',
           ],
           'sources': [
             'runtime/browser/tizen/xwalk_web_contents_view_delegate.cc',
@@ -457,11 +472,15 @@
             ],
         }],
         ['enable_plugins==1', {
-          'dependencies': [
-            '../ppapi/ppapi_internal.gyp:ppapi_host',
-            '../ppapi/ppapi_internal.gyp:ppapi_proxy',
-            '../ppapi/ppapi_internal.gyp:ppapi_ipc',
-            '../ppapi/ppapi_internal.gyp:ppapi_shared',
+          'conditions': [
+            ['xwalk_link_against_chromium_ewk==0', {
+              'dependencies': [
+                '../ppapi/ppapi_internal.gyp:ppapi_host',
+                '../ppapi/ppapi_internal.gyp:ppapi_proxy',
+                '../ppapi/ppapi_internal.gyp:ppapi_ipc',
+                '../ppapi/ppapi_internal.gyp:ppapi_shared',
+              ],
+            }],
           ],
         }, {  # enable_plugins==0
           'sources/': [
@@ -618,6 +637,7 @@
       'mac_bundle': 1,
       'defines!': ['CONTENT_IMPLEMENTATION'],
       'dependencies': [
+        '<(DEPTH)/tizen_src/ewk/efl_integration/efl_integration.gypi:chromium-ewk',
         'xwalk_runtime',
         'xwalk_pak',
       ],
@@ -646,6 +666,16 @@
         },
       },
       'conditions': [
+        ['xwalk_link_against_chromium_ewk==1', {
+          'link_settings': {
+            'libraries': [
+              '-lppapi_ipc'
+            ],
+          },
+          'library_dirs': [
+            '<(PRODUCT_DIR)/obj/ppapi/',
+          ],
+        }],
         ['OS=="win" and win_use_allocator_shim==1', {
           'dependencies': [
             '../base/allocator/allocator.gyp:allocator',
@@ -671,7 +701,7 @@
             '../sandbox/sandbox.gyp:sandbox',
           ],
         }],  # OS=="win"
-        ['use_efl==1', {
+        ['use_efl==1 and xwalk_link_against_chromium_ewk==0', {
           'dependencies': [
             '<(DEPTH)/tizen_src/chromium_impl/efl/efl.gyp:efl-init',
           ],

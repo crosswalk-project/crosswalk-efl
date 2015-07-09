@@ -4,11 +4,6 @@
       'target_name': 'sysapps',
       'type': 'static_library',
       'dependencies': [
-        '../../base/base.gyp:base',
-        '../../net/net.gyp:net',
-        '../../ui/base/ui_base.gyp:ui_base',
-        '../../ui/gfx/gfx.gyp:gfx',
-        '../../ui/gfx/gfx.gyp:gfx_geometry',
         '../extensions/extensions.gyp:xwalk_extensions',
         'sysapps_resources.gyp:xwalk_sysapps_resources',
       ],
@@ -70,11 +65,24 @@
         'raw_socket/udp_socket_object.h',
       ],
       'conditions': [
-        ['OS!="android"', {
+        ['xwalk_link_against_chromium_ewk==0', {
+          'dependencies': [
+            '../../base/base.gyp:base',
+            '../../net/net.gyp:net',
+            '../../ui/base/ui_base.gyp:ui_base',
+            '../../ui/gfx/gfx.gyp:gfx',
+            '../../ui/gfx/gfx.gyp:gfx_geometry',
+          ],
+        }],
+        ['OS!="android" and xwalk_link_against_chromium_ewk==0', {
           'dependencies': [
             '../../components/components.gyp:storage_monitor',
             '../../content/content.gyp:content_common',
             '../../media/media.gyp:media',
+          ],
+        }],
+        ['OS!="android"', {
+          'dependencies': [
             '../../third_party/ffmpeg/ffmpeg.gyp:ffmpeg',
           ],
           'sources': [

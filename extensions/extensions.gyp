@@ -4,12 +4,6 @@
       'target_name': 'xwalk_extensions',
       'type': 'static_library',
       'dependencies': [
-        '../../base/base.gyp:base',
-        '../../content/content.gyp:content',
-        '../../ipc/ipc.gyp:ipc',
-        '../../url/url.gyp:url_lib',
-        '../../v8/tools/gyp/v8.gyp:v8',
-        '../../third_party/WebKit/public/blink.gyp:blink',
         'extensions_resources.gyp:xwalk_extensions_resources',
         '<(DEPTH)/tizen_src/build/system.gyp:ecore-x',
         '<(DEPTH)/tizen_src/build/system.gyp:elementary',
@@ -68,6 +62,24 @@
         'renderer/xwalk_v8_utils.h',
         'renderer/xwalk_v8tools_module.cc',
         'renderer/xwalk_v8tools_module.h',
+      ],
+      'conditions': [
+        ['xwalk_link_against_chromium_ewk==0', {
+          'dependencies': [
+             '../../base/base.gyp:base',
+             '../../content/content.gyp:content',
+             '../../ipc/ipc.gyp:ipc',
+             '../../url/url.gyp:url_lib',
+             '../../v8/tools/gyp/v8.gyp:v8',
+             '../../third_party/WebKit/public/blink.gyp:blink',
+          ],
+        } , {
+          'include_dirs': [
+            '<(DEPTH)/',
+            '<(DEPTH)/third_party/skia/include/config/',
+            '<(DEPTH)/third_party/WebKit',
+          ],
+        }],
       ],
     },
   ],

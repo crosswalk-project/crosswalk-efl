@@ -5,6 +5,7 @@
       'type': 'executable',
       'product_name': 'xwalk_backend',
       'dependencies': [
+        '<(DEPTH)/tizen_src/ewk/efl_integration/efl_integration.gypi:chromium-ewk',
         '../../../application/common/xwalk_application_common.gypi:xwalk_application_common_lib',
         '../../../build/system.gyp:gio',
         '../../../build/system.gyp:tizen',
@@ -39,6 +40,7 @@
       'type': 'shared_library',
       'product_name': 'xwalk_backend_lib',
       'dependencies': [
+        '<(DEPTH)/tizen_src/ewk/efl_integration/efl_integration.gypi:chromium-ewk',
         '../../../build/system.gyp:tizen',
         '../../../../base/base.gyp:base',
         '../../common/xwalk_application_common.gypi:xwalk_application_common_lib',
