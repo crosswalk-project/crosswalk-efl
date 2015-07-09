@@ -97,6 +97,10 @@ XWalkBrowserMainParts::XWalkBrowserMainParts(
   base::CommandLine::ForCurrentProcess()->AppendSwitch(
       "disable-setuid-sandbox");
 #endif
+#if defined(USE_EFL)
+  base::CommandLine::ForCurrentProcess()->AppendSwitch("no-sandbox");
+#endif
+
 }
 
 XWalkBrowserMainParts::~XWalkBrowserMainParts() {

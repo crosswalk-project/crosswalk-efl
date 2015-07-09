@@ -133,6 +133,12 @@ void application_event_cb(app_event event, void* data, bundle* b) {
 
 bool ApplicationSystemTizen::LaunchFromCommandLine(
     const base::CommandLine& cmd_line, const GURL& url) {
+#if defined(USE_EFL)
+  // The default Tizen launcher does not handle .wgt extension
+  // properly. For now, just call the desktop variant of this class.
+  if (ApplicationSystem::LaunchFromCommandLine(cmd_line, url))
+    return true;
+#endif
   // Handles raw app_id passed as first non-switch argument.
   const base::CommandLine::StringVector& args = cmd_line.argv();
   CHECK(!args.empty());
