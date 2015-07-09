@@ -1,4 +1,7 @@
 {
+  'variables': {
+    'external_xwalk_extensions_dependencies_removals%': [],
+  },
   'targets': [
     {
       'target_name': 'xwalk_extensions',
@@ -69,6 +72,9 @@
         'renderer/xwalk_v8tools_module.cc',
         'renderer/xwalk_v8tools_module.h',
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_extensions_dependencies_removals)',
+      ]
     },
   ],
 }

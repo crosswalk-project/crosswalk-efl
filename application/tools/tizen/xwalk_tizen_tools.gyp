@@ -9,6 +9,7 @@
         '../../../build/system.gyp:gio',
         '../../../build/system.gyp:tizen',
         '../../../build/system.gyp:tizen_tzplatform_config',
+        '<@(external_chromium_ewk_dependency)',
       ],
       'include_dirs': [
         '../../../..',
@@ -42,6 +43,7 @@
         '../../../build/system.gyp:tizen',
         '../../../../base/base.gyp:base',
         '../../common/xwalk_application_common.gypi:xwalk_application_common_lib',
+        '<@(external_chromium_ewk_dependency)',
       ],
       'include_dirs': [
         '../../../..',
