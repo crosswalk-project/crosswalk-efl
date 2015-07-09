@@ -4,11 +4,11 @@
       'target_name': 'sysapps',
       'type': 'static_library',
       'dependencies': [
-        '../../base/base.gyp:base',
-        '../../net/net.gyp:net',
-        '../../ui/base/ui_base.gyp:ui_base',
-        '../../ui/gfx/gfx.gyp:gfx',
-        '../../ui/gfx/gfx.gyp:gfx_geometry',
+        #'../../base/base.gyp:base',
+        #'../../net/net.gyp:net',
+        #'../../ui/base/ui_base.gyp:ui_base',
+        #'../../ui/gfx/gfx.gyp:gfx',
+        #'../../ui/gfx/gfx.gyp:gfx_geometry',
         '../extensions/extensions.gyp:xwalk_extensions',
         'sysapps_resources.gyp:xwalk_sysapps_resources',
       ],
@@ -73,8 +73,8 @@
         ['OS!="android"', {
           'dependencies': [
             '../../components/components.gyp:storage_monitor',
-            '../../content/content.gyp:content_common',
-            '../../media/media.gyp:media',
+            #'../../content/content.gyp:content_common',
+            #'../../media/media.gyp:media',
             '../../third_party/ffmpeg/ffmpeg.gyp:ffmpeg',
           ],
           'sources': [
