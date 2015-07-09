@@ -1,4 +1,7 @@
 {
+  'variables': {
+    'external_xwalk_tizen_lib_dependencies_removals%': [],
+  },
   'targets': [
   {
     'target_name': 'xwalk_tizen_lib',
@@ -42,5 +45,8 @@
         ],
       }],
     ],
+    'dependencies!' : [
+      '<@(external_xwalk_tizen_lib_dependencies_removals)',
+    ]
   }],
 }

@@ -12,6 +12,8 @@
         'enable_extensions': 1,
       }],
     ], # conditions
+    'external_xwalk_dependencies_removals%': [],
+    'external_xwalk_runtime_dependencies_removals%': [],
   },
   'includes' : [
     'xwalk_tests.gypi',
@@ -470,6 +472,9 @@
           ],
         }],
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_runtime_dependencies_removals)',
+      ]
     },
     {
       'target_name': 'generate_upstream_blink_version',
@@ -618,6 +623,7 @@
       'mac_bundle': 1,
       'defines!': ['CONTENT_IMPLEMENTATION'],
       'dependencies': [
+        '<(DEPTH)/tizen_src/ewk/efl_integration/efl_integration.gypi:chromium-ewk',
         'xwalk_runtime',
         'xwalk_pak',
       ],
@@ -746,6 +752,9 @@
           ],
         }],  # OS=="mac"
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_dependencies_removals)',
+      ]
     },
     {
       'target_name': 'xwalk_builder',

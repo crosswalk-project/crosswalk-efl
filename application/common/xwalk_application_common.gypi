@@ -1,4 +1,7 @@
 {
+'variables': {
+  'external_xwalk_application_common_lib_dependencies_removals%': [],
+},
 'targets': [
     {
       'target_name': 'xwalk_application_common_lib',
@@ -108,6 +111,9 @@
         '../..',
         '../../..',
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_application_common_lib_dependencies_removals)',
+      ]
     },
   ],
 }

@@ -1,4 +1,7 @@
 {
+  'variables': {
+    'external_sysapps_dependencies_removals%': [],
+  },
   'targets': [
     {
       'target_name': 'sysapps',
@@ -93,6 +96,9 @@
           '<(SHARED_INTERMEDIATE_DIR)',
         ]
       },
+      'dependencies!' : [
+        '<@(external_sysapps_dependencies_removals)',
+      ]
     },
   ],
 }
