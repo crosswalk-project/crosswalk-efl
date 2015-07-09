@@ -12,6 +12,8 @@
         'enable_extensions': 1,
       }],
     ], # conditions
+    'external_xwalk_dependencies_removals%': [],
+    'external_xwalk_runtime_dependencies_removals%': [],
   },
   'includes' : [
     'xwalk_tests.gypi',
@@ -310,6 +312,14 @@
         },
       },
       'conditions': [
+        ['xwalk_link_against_chromium_ewk==1', {
+          'include_dirs': [
+            '<(DEPTH)/third_party/skia/include/config/',
+            '<(DEPTH)/third_party/skia/include/core/',
+            '<(DEPTH)/third_party/WebKit/',
+            '<(DEPTH)/third_party/mojo/src/',
+          ],
+        }],
         ['tizen==1', {
           'dependencies': [
             '../content/app/resources/content_resources.gyp:content_resources',
@@ -470,6 +480,9 @@
           ],
         }],
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_runtime_dependencies_removals)',
+      ]
     },
     {
       'target_name': 'generate_upstream_blink_version',
@@ -618,6 +631,7 @@
       'mac_bundle': 1,
       'defines!': ['CONTENT_IMPLEMENTATION'],
       'dependencies': [
+        '<(DEPTH)/tizen_src/ewk/efl_integration/efl_integration.gypi:chromium-ewk',
         'xwalk_runtime',
         'xwalk_pak',
       ],
@@ -646,6 +660,16 @@
         },
       },
       'conditions': [
+        ['xwalk_link_against_chromium_ewk==1', {
+          'link_settings': {
+            'libraries': [
+              '-lppapi_ipc'
+            ],
+          },
+          'library_dirs': [
+            '<(PRODUCT_DIR)/obj/ppapi/',
+          ],
+        }],
         ['OS=="win" and win_use_allocator_shim==1', {
           'dependencies': [
             '../base/allocator/allocator.gyp:allocator',
@@ -746,6 +770,9 @@
           ],
         }],  # OS=="mac"
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_dependencies_removals)',
+      ]
     },
     {
       'target_name': 'xwalk_builder',

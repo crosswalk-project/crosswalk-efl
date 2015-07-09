@@ -1,4 +1,7 @@
 {
+'variables': {
+  'external_xwalk_application_lib_dependencies_removals%': [],
+},
 'targets': [
     {
       'target_name': 'xwalk_application_lib',
@@ -39,6 +42,13 @@
         'renderer/application_native_module.h',
       ],
       'conditions': [
+        ['xwalk_link_against_chromium_ewk==1', {
+          'include_dirs': [
+            '<(DEPTH)/third_party/WebKit',
+            '<(DEPTH)/third_party/skia/include/config/',
+            '<(DEPTH)/third_party/mojo/src/',
+          ],
+        }],
         ['tizen==1', {
           'dependencies': [
             'build/system.gyp:tizen',
@@ -66,6 +76,9 @@
         '..',
         '../..',
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_application_lib_dependencies_removals)',
+      ]
     },
 
     {

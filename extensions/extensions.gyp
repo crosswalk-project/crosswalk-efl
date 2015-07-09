@@ -1,4 +1,7 @@
 {
+  'variables': {
+    'external_xwalk_extensions_dependencies_removals%': [],
+  },
   'targets': [
     {
       'target_name': 'xwalk_extensions',
@@ -69,6 +72,18 @@
         'renderer/xwalk_v8tools_module.cc',
         'renderer/xwalk_v8tools_module.h',
       ],
+      'conditions': [
+        ['xwalk_link_against_chromium_ewk==1', {
+          'include_dirs': [
+            '<(DEPTH)/',
+            '<(DEPTH)/third_party/skia/include/config/',
+            '<(DEPTH)/third_party/WebKit',
+          ],
+        }],
+      ],
+      'dependencies!' : [
+        '<@(external_xwalk_extensions_dependencies_removals)',
+      ]
     },
   ],
 }

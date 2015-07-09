@@ -1,4 +1,7 @@
 {
+'variables': {
+  'external_xwalk_application_common_lib_dependencies_removals%': [],
+},
 'targets': [
     {
       'target_name': 'xwalk_application_common_lib',
@@ -61,6 +64,9 @@
             '../../../third_party/re2/re2.gyp:re2',
             '../../../net/net.gyp:net',
           ],
+          'include_dirs': [
+            '<(DEPTH)/third_party/mojo/src/',
+          ],
           'sources': [
             'manifest_handlers/tizen_app_control_handler.cc',
             'manifest_handlers/tizen_app_control_handler.h',
@@ -108,6 +114,9 @@
         '../..',
         '../../..',
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_application_common_lib_dependencies_removals)',
+      ]
     },
   ],
 }
