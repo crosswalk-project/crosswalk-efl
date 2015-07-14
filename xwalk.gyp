@@ -12,6 +12,9 @@
         'enable_extensions': 1,
       }],
     ], # conditions
+    'external_xwalk_dependencies_removals%': [],
+    'external_xwalk_runtime_dependencies_removals%': [],
+    'external_chromium_ewk_dependency%': [],
   },
   'includes' : [
     'xwalk_tests.gypi',
@@ -470,6 +473,9 @@
           ],
         }],
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_runtime_dependencies_removals)',
+      ]
     },
     {
       'target_name': 'generate_upstream_blink_version',
@@ -620,6 +626,7 @@
       'dependencies': [
         'xwalk_runtime',
         'xwalk_pak',
+        '<@(external_chromium_ewk_dependency)',
       ],
       'include_dirs': [
         '..',
@@ -746,6 +753,9 @@
           ],
         }],  # OS=="mac"
       ],
+      'dependencies!' : [
+        '<@(external_xwalk_dependencies_removals)',
+      ]
     },
     {
       'target_name': 'xwalk_builder',
